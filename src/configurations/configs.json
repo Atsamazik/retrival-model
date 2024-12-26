@@ -1,0 +1,9 @@
+{
+  "BASE_MODEL_NAME": "intfloat/e5-small-v2",
+  "learning_rate": 0.00005,
+  "seed": 42,
+  "batch_size": 4,
+  "num_workers": 2,
+  "optimizer": "adamw",
+  "loss": "contrastive_loss"
+}
