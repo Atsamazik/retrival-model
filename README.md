@@ -19,11 +19,11 @@ python src/process_data.py show-saved-data --number [number]
 ```
 3. Запуск обучения
 ```commandline
-    python src/loop.py
+python src/loop.py
 ```
 4. Использование
 ```commandline
-    python src/usage.py
+python src/usage.py
 ```
 
 
