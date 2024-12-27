@@ -1,9 +1,14 @@
+import sys
+import os
 from pathlib import Path
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 import typer
 from safetensors.torch import load_file
 from transformers import AutoTokenizer
+
 
 from src.dataset import pad_tensors
 from src.model import RetrievalModel
@@ -20,7 +25,7 @@ def main():
     model = RetrievalModel().eval()
     with torch.no_grad():
         tokenizer = AutoTokenizer.from_pretrained(config.BASE_MODEL_NAME)
-        model.load_state_dict(load_file(SAVE_MODEL_PATH / 'retrieval-100.safetensors'))
+        model.load_state_dict(load_file(SAVE_MODEL_PATH / 'retrieval-200.safetensors'))
 
         query = 'query: Where when and how did the idea of “reasonableness” originate?'
         query = tokenizer.encode_plus(query).encodings[0]
@@ -29,7 +34,7 @@ def main():
             "passage: <p>The  &quot;reasonable man&quot; standard in the common law of torts</a> is sometimes attributed to the English case of Vaughan v. Menlove</a></em> (1837).</p>\n",
             "passage: <p>If you pushed her back <strong>after</strong> she slapped you <strong>and</strong> it is not clear that a second slapping would occur (<strong>or</strong> she slapped you, because you pushed her)</p>\n<ul>\n<li>then it is <strong>not</strong> self-defence\n<ul>\n<li>you (<strong>or</strong> she) did not <strong>prevent a present</strong> unlawful attack</li>\n</ul>\n</li>\n</ul>\n<p>If it is clear that you are <strong>going to be</strong> slapped</p>\n<ul>\n<li>then pushing her away, in a reasonable manor, is self-defence\n<ul>\n<li>you <strong>prevented a present</strong> unlawful attack</li>\n</ul>\n</li>\n</ul>\n<p>What is considered <strong>reasonable</strong> will later be determined by a judge.</p>\n<hr />\n<blockquote>\n\§ 32 - Self-defence StGB</a><br />\n(2) ‘Self-defence’ means any defensive action which is necessary <strong>to avert a present</strong> unlawful attack on oneself or another.</p>\n</blockquote>\n<hr />\n<p><strong>Sources</strong>:</p>\n<ul>\n<li>§ 32 - Self-defence StGB</a></li>\n</ul>\n"
         ]
-        documents = tokenizer(documents, max_length=512).encodings
+        documents = tokenizer(documents, max_length=512, truncation="longest_first").encodings
         document_input_ids = pad_tensors([torch.tensor(x.ids) for x in documents])
         document_attention_mask = pad_tensors([torch.tensor(x.attention_mask) for x in documents])
 
@@ -42,4 +47,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    app()

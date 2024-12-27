@@ -10,6 +10,7 @@ from transformers import AutoTokenizer
 from configurations.validation import load_config
 
 config = load_config()
+
 PROJ_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJ_ROOT / "data"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
@@ -48,9 +49,15 @@ class RetrievalDataset(torch.utils.data.Dataset):
         if negative_answer is None:
             negative_answer = positive_answer
 
-        anchor_enc = self._tokenizer.encode_plus(question, max_length=512).encodings[0]
-        positive_enc = self._tokenizer.encode_plus(positive_answer, max_length=512).encodings[0]
-        negative_enc = self._tokenizer.encode_plus(negative_answer, max_length=512).encodings[0]
+        anchor_enc = self._tokenizer.encode_plus(question,
+                                                 max_length=512,
+                                                 truncation="longest_first").encodings[0]
+        positive_enc = self._tokenizer.encode_plus(positive_answer,
+                                                   max_length=512,
+                                                   truncation="longest_first").encodings[0]
+        negative_enc = self._tokenizer.encode_plus(negative_answer,
+                                                   max_length=512,
+                                                   truncation="longest_first").encodings[0]
         return {
             'query': {
                 'input_ids': torch.tensor(anchor_enc.ids, dtype=torch.long),
