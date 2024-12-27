@@ -5,25 +5,25 @@ Retrieval model tuning
 
 В качестве метрик были взяты contrastive_loss и triplet_margin_loss
 
-Для запуска 
 
-    
-    Предобработка и сохранение данных
-    
-    ```
-        python -m src.process_data
-    ```
-    Запуск обучения 
-    
-    ```
-        python -m src.loop main
 
-    ```
-    Использование 
-    
-    ```
-        python -m src.loop main
 
-    ```
+1. Предобработка и сохранение данных
+```commandline
+python src/process_data.py preprocess-dataset
+```
+
+2. Посмотреть данные
+```commandline
+python src/process_data.py show-saved-data --number [number]
+```
+3. Запуск обучения
+```commandline
+    python src/loop.py
+```
+4. Использование
+```commandline
+    python src/usage.py
+```
 
 
